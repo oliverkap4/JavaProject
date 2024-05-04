@@ -1,0 +1,379 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+public class Atest 
+{
+	
+	public class Main 
+	{
+		public static void main(String[] args) 
+	    {
+	        Scanner skener = new Scanner(System.in) ;
+	        DKTest Datab = new DKTest() ;
+	        
+	        int Voľba ;	
+	        boolean Chod = true ;
+	        
+	        System.out.println("Vitajte v aplikácií na manažovanie kníh") ;
+	        Menu.totoMenu() ;
+	        while (Chod)
+			{
+	        	try {
+	                Voľba = skener.nextInt() ;
+	                skener.nextLine() ;
+					switch(Voľba)
+					{
+					case 1:
+						System.out.println("Vyberte typ knihy ktorú chcete pridať (Roman/Ucebnica , roman/ucebnica)") ;
+						String typKnihy = skener.nextLine().toLowerCase() ;
+					    
+						if (typKnihy.equalsIgnoreCase("Roman") || typKnihy.equalsIgnoreCase("roman")) 
+						{
+						    System.out.println("Zadajte názov knihy:") ;
+						    String nazovR = skener.nextLine() ;
+						    System.out.println("Zadajte autora knihy:") ;
+						    String autorR = skener.nextLine();
+						    System.out.println("Zadajte rok vydania knihy:") ;
+						    int rokR = Integer.parseInt(skener.nextLine()) ;
+						    String stavR = null ;
+						    while (true) 
+						    {
+						    	System.out.println("Zadajte stav dostupnosti knihy (Dostupna/Nedostupna):") ;
+						    	String stavR1 = skener.nextLine() ;
+						    	if (stavR1.equalsIgnoreCase("Dostupna") || stavR1.equalsIgnoreCase("Nedostupna") || stavR1.equalsIgnoreCase("dostupna") || stavR1.equalsIgnoreCase("nedostupna")) 
+						    	{
+						    		break ;
+						    	} 
+						    	else 
+						    	{
+						    		System.out.println("Prosím vyberte Dostupna alebo Nedostupna.") ;
+						    	}
+						    }
+                    
+						    String zanerR = null ;
+						    while (true) 
+						    {
+						    	System.out.println("Zadajte žáner knihy (Fantazia, Romantika, Sci-fi, Klasika, Horor):") ;
+						    	String zanerR1 = skener.nextLine() ;
+						    	if (zanerR1.equalsIgnoreCase("Fantazia") || zanerR1.equalsIgnoreCase("Romantika") || zanerR1.equalsIgnoreCase("Sci-fi") || zanerR1.equalsIgnoreCase("Klasika") || zanerR1.equalsIgnoreCase("Horor")
+						    	||	zanerR1.equalsIgnoreCase("fantazia") || zanerR1.equalsIgnoreCase("romantika") || zanerR1.equalsIgnoreCase("sci-fi") || zanerR1.equalsIgnoreCase("klasika") || zanerR1.equalsIgnoreCase("horor"))
+						    	{
+						    		break ;
+						    	} 
+						    	else 
+						    	{
+						    		System.out.println("Prosím vyberte jednu z možností: Fantazia, Romantika, Sci-fi, Klasika, Horor.") ;
+						    	}
+						    }
+						    Datab.addBookR(nazovR, new RTest(nazovR, autorR, rokR, stavR, zanerR)) ;
+						    System.out.println("Kniha bola úspešne pridaná do databázy") ;
+						    
+						} 
+						else if (typKnihy.equalsIgnoreCase("Ucebnica") || typKnihy.equalsIgnoreCase("ucebnica")) 
+						{						  
+						    System.out.println("Zadajte názov knihy:") ;
+						    String nazovU = skener.nextLine() ;
+						    System.out.println("Zadajte autora knihy:") ;
+						    String autorU = skener.nextLine() ;
+						    System.out.println("Zadajte rok vydania knihy:") ;
+						    int rokU = Integer.parseInt(skener.nextLine()) ;
+						    String stavU = null ;
+						    while (true) 
+						    {
+						    	System.out.println("Zadajte stav dostupnosti knihy (Dostupna/Nedostupna):") ;
+						    	String stavU1 = skener.nextLine() ;
+						    	if (stavU1.equalsIgnoreCase("Dostupna") || stavU1.equalsIgnoreCase("Nedostupna") || stavU1.equalsIgnoreCase("dostupna") || stavU1.equalsIgnoreCase("nedostupna")) 
+						    	{
+						    		break ;
+						    	} 
+						    	else 
+						    	{
+						    		System.out.println("Prosím vyberte Dostupna alebo Nedostupna.") ;
+						    	}
+						    }
+						    String vhodnostU = null ;
+						    while (true) 
+						    {
+						    	System.out.println("Zadajte stav vhodnosti knihy (Deti/Tinedzeri/Dospely):") ;
+						    	String vhodnostU1 = skener.nextLine() ;
+						    	if (vhodnostU1.equalsIgnoreCase("deti") || vhodnostU1.equalsIgnoreCase("tinedzeri") || vhodnostU1.equalsIgnoreCase("dospely")
+						    	||	vhodnostU1.equalsIgnoreCase("Deti") || vhodnostU1.equalsIgnoreCase("Tinedzeri") || vhodnostU1.equalsIgnoreCase("Dospely")) 
+						    	{
+						    		break ;
+						    	} 
+						    	else 
+						    	{
+						    		System.out.println("Prosím vyberte (Deti/Tinedzeri/Dospely).") ;
+						    	}
+						    }
+						    Datab.addBookU(nazovU, new UTest(nazovU, autorU, rokU, stavU, vhodnostU)) ;
+						    System.out.println("Kniha bola úspešne pridaná do databázy") ;
+						} 
+						else 
+						{
+						    System.out.println("Prosím, zadajte (Roman/Ucebnica , roman/ucebnica).") ;
+						}
+
+					break ;
+					case 2:
+						System.out.println("Zadajte názov knihy, ktorú chcete upraviť:") ;
+					    String nazovKnihy = skener.nextLine() ;
+					    RTest knihaNaZmenuR = Datab.getBookR(nazovKnihy) ;
+					    UTest knihaNaZmenuU = Datab.getBookU(nazovKnihy) ;
+					    if (knihaNaZmenuR != null || knihaNaZmenuU != null) 
+					    {
+					        if (knihaNaZmenuR != null) {
+					            System.out.println("Nájdená kniha: " + knihaNaZmenuR.getNazov()) ;
+					        } 
+					        else 
+					        {
+					            System.out.println("Nájdená kniha: " + knihaNaZmenuU.getNazov()) ;
+					        }
+					        System.out.println("Vyberte, ktorý parameter chcete upraviť:") ;
+					        System.out.println("1 .. Názov") ;
+					        System.out.println("2 .. Autor") ;
+					        System.out.println("3 .. Rok vydania") ;
+					        System.out.println("4 .. Stav dostupnosti") ;
+					        System.out.println("5 .. Žáner (Iba pre romány)") ;
+					        System.out.println("6 .. Vhodnosť (Iba pre učebnice)") ;
+					        int parameterChoice = skener.nextInt() ;
+					        skener.nextLine() ;
+					        
+					        switch (parameterChoice) 
+					        {
+					        case 1:
+					            System.out.println("Zadajte nový názov knihy:") ;
+					            String newNazov = skener.nextLine() ;
+					            if (knihaNaZmenuR instanceof RTest) 
+					            {
+					                ((RTest) knihaNaZmenuR).setNazov(newNazov) ;
+					            } 
+					            else if (knihaNaZmenuU instanceof UTest) 
+					            {
+					                ((UTest) knihaNaZmenuU).setNazov(newNazov) ;
+					            }
+					            System.out.println("Názov knihy bol úspešne zmenený.") ;
+					        break ;
+					        case 2:
+					            System.out.println("Zadajte nového autora knihy:") ;
+					            String newAutor = skener.nextLine() ;
+					            if (knihaNaZmenuR instanceof RTest) 
+					            {
+					                ((RTest) knihaNaZmenuR).setAutori(newAutor) ;
+					            } 
+					            else if (knihaNaZmenuU instanceof UTest) 
+					            {
+					                ((UTest) knihaNaZmenuU).setAutori(newAutor) ;
+					            }
+					            System.out.println("Autor knihy bol úspešne zmenený.") ;
+					        break ;
+					        case 3:
+					            System.out.println("Zadajte nový rok vydania knihy:") ;
+					            int newRok = Integer.parseInt(skener.nextLine()) ;
+					            if (knihaNaZmenuR instanceof RTest) 
+					            {
+					                ((RTest) knihaNaZmenuR).setRokVydania(newRok) ;
+					            } 
+					            else 
+					            {
+					                ((UTest) knihaNaZmenuU).setRokVydania(newRok) ;
+					            }
+					            System.out.println("Rok vydania knihy bol úspešne zmenený.") ;
+					        break ;
+					        case 4:
+					            System.out.println("Zadajte nový stav dostupnosti knihy (Dostupna/Nedostupna):") ;
+					            String newStav = skener.nextLine() ;
+					            if (knihaNaZmenuR instanceof RTest) 
+					            {
+					                ((RTest) knihaNaZmenuR).setStavDostupnosti(newStav) ;
+					            } 
+					            else 
+					            {
+					                ((UTest) knihaNaZmenuU).setStavDostupnosti(newStav) ;
+					            }
+					            System.out.println("Stav dostupnosti knihy bol úspešne zmenený.") ;
+					        break ;
+					        case 5:
+					            if (knihaNaZmenuR instanceof RTest) 
+					            {
+					                System.out.println("Zadajte nový žáner knihy (Fantazia, Romantika, Sci-fi, Klasika, Horor):") ;
+					                String newZaner = skener.nextLine() ;
+					                ((RTest) knihaNaZmenuR).setZaner(newZaner) ;
+					                System.out.println("Žáner knihy bol úspešne zmenený.") ;
+					            } 
+					            else 
+					            {
+					                System.out.println("Táto kniha nie je román, nemôžete zmeniť žáner.") ;
+					            }
+					        break ;
+					        case 6:
+					            if (knihaNaZmenuU instanceof UTest) 
+					            {
+					                System.out.println("Zadajte novú vhodnosť knihy (Deti/Tinedzeri/Dospely):") ;
+					                String newVhodnost = skener.nextLine() ;
+					                ((UTest) knihaNaZmenuU).setVhodnost(newVhodnost) ;
+					                System.out.println("Vhodnosť knihy bola úspešne zmenená.") ;
+					            } 
+					            else 
+					            {
+					                System.out.println("Táto kniha nie je učebnica, nemôžete zmeniť vhodnosť.") ;
+					            }
+					            break ;
+					        default:
+					            System.out.println("Neplatná voľba.") ;
+					        break ;
+					        }
+					    }
+					    else 
+					    {
+					        System.out.println("Kniha s daným názvom nebola nájdená.") ;
+					    }
+					break ;
+
+					case 3:
+					    System.out.println("Zadajte názov knihy, ktorú chcete vymazať:") ;
+					    String nazovKnihyNaVymazanie = skener.nextLine() ;
+					    RTest knihaNaVymazanieR = Datab.getBookR(nazovKnihyNaVymazanie) ;
+					    UTest knihaNaVymazanieU = Datab.getBookU(nazovKnihyNaVymazanie) ;
+					    if (knihaNaVymazanieR != null || knihaNaVymazanieU != null) 
+					    {
+					        if (knihaNaVymazanieR != null) 
+					        {
+					            Datab.removeBookR(nazovKnihyNaVymazanie) ;
+					            System.out.println("Kniha " + nazovKnihyNaVymazanie + " bola úspešne vymazaná.") ;
+					        } 
+					        else 
+					        {
+					            Datab.removeBookU(nazovKnihyNaVymazanie) ;
+					            System.out.println("Kniha " + nazovKnihyNaVymazanie + " bola úspešne vymazaná.") ;
+					        }
+					    } 
+					    else 
+					    {
+					        System.out.println("Kniha s daným názvom nebola nájdená.") ;
+					    }
+					    
+					break ;
+					case 4:
+					    System.out.println("Zadajte názov knihy, ktorú chcete označiť (vypůjčenou/vrácenou):") ;
+					    String nazovKnihyNaAktualizáciu = skener.nextLine() ;
+					    RTest knihaNaAktualizáciuR = Datab.getBookR(nazovKnihyNaAktualizáciu) ;
+					    UTest knihaNaAktualizáciuU = Datab.getBookU(nazovKnihyNaAktualizáciu) ;
+					    if (knihaNaAktualizáciuR != null || knihaNaAktualizáciuU != null) 
+					    {
+					        System.out.println("Zadajte stav knihy (Vypůjčená/Vrácená):") ;
+					        String newStav = skener.nextLine() ;
+					        if (knihaNaAktualizáciuR != null) 
+					        {
+					            knihaNaAktualizáciuR.setStavDostupnosti(newStav) ;
+					            System.out.println("Stav knihy " + nazovKnihyNaAktualizáciu + " bol úspešne aktualizovaný.") ;
+					        } 
+					        else 
+					        {
+					            knihaNaAktualizáciuU.setStavDostupnosti(newStav) ;
+					            System.out.println("Stav knihy " + nazovKnihyNaAktualizáciu + " bol úspešne aktualizovaný.") ;
+					        }
+					    } 
+					    else 
+					    {
+					        System.out.println("Kniha s daným názvom nebola nájdená.") ;
+					    }
+					    
+					break ;
+					case 5:
+					    ArrayList<RTest> vsetkyRKnihy = (ArrayList<RTest>) Datab.getAllBooksR() ;
+					    ArrayList<UTest> vsetkyUKnihy = (ArrayList<UTest>) Datab.getAllBooksU() ;
+
+					    Collections.sort(vsetkyRKnihy, Comparator.comparing(RTest::getNazov)) ;
+					    Collections.sort(vsetkyUKnihy, Comparator.comparing(UTest::getNazov)) ;
+
+					    if (vsetkyRKnihy.isEmpty() && vsetkyUKnihy.isEmpty()) 
+					    {
+					        System.out.println("V databázi nie sú k dispozicií žiadne knihy. Pridajte knihu nasjkôr.") ;
+					    } 
+					    else 
+					    {
+					        System.out.println("Výpis kníh v abecednom poradí:") ;
+					        for (RTest rBook : vsetkyRKnihy) 
+					        {
+					            System.out.println("Názov: " + rBook.getNazov()) ;
+					            System.out.println("Autori: " + rBook.getAutori()) ;
+					            System.out.println("Žáner: " + rBook.getZaner()) ;
+					            System.out.println("Rok vydania: " + rBook.getRokVydania()) ;
+					            System.out.println("Stav dostupnosti: " + rBook.getStavDostupnosti()) ;
+					            System.out.println() ;
+					        }
+					        for (UTest uBook : vsetkyUKnihy) 
+					        {
+					            System.out.println("Názov: " + uBook.getNazov()) ;
+					            System.out.println("Autori: " + uBook.getAutori()) ;
+					            System.out.println("Ročník: " + uBook.getVhodnost()) ;
+					            System.out.println("Rok vydania: " + uBook.getRokVydania()) ;
+					            System.out.println("Stav dostupnosti: " + uBook.getStavDostupnosti()) ;
+					            System.out.println() ;
+					        }
+					    }
+					    
+					break ;
+					case 6:
+						
+					break ;
+					case 7:
+						
+					break ;
+					case 8:
+						
+					break ;
+					case 9:
+						
+					break ;
+					case 10:
+						
+					break ;
+					case 11:
+						
+					break ;
+					case 12:
+						
+					break ;
+					
+					default:
+                        System.out.println("Neplatná voľba.") ;
+                    break ;
+					}
+					Menu.totoMenu() ;
+	        	} 
+	        	catch (InputMismatchException e) 
+	        	{
+	                System.out.println("Neplatný vstup. Prosím zadajte platné číslo.") ;
+	                skener.nextLine() ;
+	            }
+	        	
+			}
+	        skener.close() ;
+	       
+	    }
+	}
+	public class Menu
+	{
+		public static void totoMenu()
+		{
+        System.out.println("Vyberte pozadovanu cinnost:") ;
+		System.out.println("1 .. Pridanie novej knihy") ;
+		System.out.println("2 .. Úprava knihy") ;
+		System.out.println("3 .. Vymazanie knihy") ;
+		System.out.println("4 .. Značenie stavu knihy Vrátená/Vypožičaná") ;
+		System.out.println("5 .. Výpis všetkých kníh") ;
+		System.out.println("6 .. Vyhľadanie knihy podľa názvu") ;
+		System.out.println("7 .. Výpis kníh podľa Autorov (Chronologicky)") ;
+		System.out.println("8 .. Výpis kníh podľa Žánru") ;
+		System.out.println("9 .. Výpis kníh Nedostupných (Román/Učebnica)") ;
+		System.out.println("10.. Uloženie knihy do súboru") ;
+		System.out.println("11.. Načítanie informácií o danej knihe zo súboru") ;
+		System.out.println("12.. Ukončenie aplikácie") ;
+		}
+	}
+}
