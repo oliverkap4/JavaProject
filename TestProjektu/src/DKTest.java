@@ -4,7 +4,9 @@ import java.util.Map;
 import java.util.Set;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 
 public class DKTest {
@@ -106,37 +108,128 @@ public class DKTest {
 	}
 
 	
-	public class DatabaseManager 
-	{
-	    private static final String URL = "jdbc:sqlite:library.db" ;
+	
+	    private static final String URL = "jdbc:sqlite:SQLKnihy.db" ;
 
 	    public static Connection getConnection() throws SQLException 
 	    {
 	        return DriverManager.getConnection(URL) ;
 	    }
-
+	    
+	    public static void vytvoritDK()
+	    {
+	    	
+	    }
+	    
 	    public static void ulozitDK() 
 	    {
 	        try (Connection connection = getConnection()) 
 	        {
-	            
-	        } catch (SQLException e) 
+	            Statement statement = connection.createStatement() ;
+
+	            String checkTableQuery = "SELECT name FROM sqlite_master WHERE type='table' AND name='knihy'" ;
+	            if (!statement.executeQuery(checkTableQuery).next()) 
+	            {
+	                String createTableQuery = "CREATE TABLE knihy (nazov TEXT PRIMARY KEY, autor TEXT, zaner TEXT, rok INTEGER, stav TEXT)" ;
+	                statement.executeUpdate(createTableQuery) ;
+	            }
+
+	            nacitatDataDo(statement) ;
+
+	        } 
+	        catch (SQLException e) 
 	        {
 	            e.printStackTrace() ;
 	        }
 	    }
 
-	    public static void nacitatDK() 
+	   
+	
+	public static void nacitatDK() 
+	{
+	    try (Connection connection = getConnection()) 
 	    {
-	        try (Connection connection = getConnection()) 
+	        Statement A = connection.createStatement() ;
+
+	        String checkTableQuery = "SELECT name FROM sqlite_master WHERE type='table' AND name='knihy'" ;
+	        if (!A.executeQuery(checkTableQuery).next()) 
 	        {
-	            
-	        } catch (SQLException e) 
+	            String createTableQuery = "CREATE TABLE knihy (nazov TEXT PRIMARY KEY, autor TEXT, zaner TEXT, rok INTEGER, stav TEXT)" ;
+	            A.executeUpdate(createTableQuery) ;
+	        }
+
+	        nacitatDataDo(A) ;
+
+	    } 
+	    catch (SQLException e) 
+	    {
+	        e.printStackTrace() ;
+	    }
+	}
+
+	private static void nacitatDataDo(Statement statement) 
+	{
+	    try 
+	    {
+	        DKTest database = new DKTest() ;
+
+	        ArrayList<RTest> allRBooks = database.getAllBooksR() ;
+
+	        for (RTest rBook : allRBooks) 
 	        {
-	            e.printStackTrace() ;
+	            String nazov = rBook.getNazov() ;
+	            String autor = rBook.getAutori() ;
+	            String zaner = rBook.getZaner() ;
+	            int rok = rBook.getRokVydania() ;
+	            String stav = rBook.getStavDostupnosti() ;
+
+	            String insertQuery = "INSERT INTO knihy (nazov, autor, zaner, rok, stav) VALUES ('" + nazov + "', '" + autor + "', '" + zaner + "', " + rok + ", '" + stav + "')" ;
+	            statement.executeUpdate(insertQuery) ;
+	        }
+
+	        ArrayList<UTest> allUBooks = database.getAllBooksU() ;
+
+	        for (UTest uBook : allUBooks) 
+	        {
+	            String nazov = uBook.getNazov() ;
+	            String autor = uBook.getAutori() ;
+	            String zaner = "Román" ; 
+	            int rok = uBook.getRokVydania() ;
+	            String stav = uBook.getStavDostupnosti() ;
+
+	            String insertQuery = "INSERT INTO knihy (nazov, autor, zaner, rok, stav) VALUES ('" + nazov + "', '" + autor + "', '" + zaner + "', " + rok + ", '" + stav + "')" ;
+	            statement.executeUpdate(insertQuery) ;
+	        }
+	    } 
+	    catch (SQLException e) 
+	    {
+	        e.printStackTrace() ;
+	    }
+	}
+
+	private static void Tabulka(Connection connection) throws SQLException 
+	{
+	    String selectQuery = "SELECT * FROM knihy" ;
+	    try (Statement statement = connection.createStatement() ;
+	         ResultSet resultSet = statement.executeQuery(selectQuery)) 
+	    {
+	        while (resultSet.next()) 
+	        {
+	            String nazov = resultSet.getString("nazov") ;
+	            String autor = resultSet.getString("autor") ;
+	            String zaner = resultSet.getString("zaner") ;
+	            int rok = resultSet.getInt("rok") ;
+	            String stav = resultSet.getString("stav") ;
+	            System.out.println("Nazov: " + nazov) ;
+	            System.out.println("Autor: " + autor) ;
+	            System.out.println("Zaner: " + zaner) ;
+	            System.out.println("Rok: " + rok) ;
+	            System.out.println("Stav: " + stav) ;
+	            System.out.println() ; 
 	        }
 	    }
 	}
+
 
 	
 }
