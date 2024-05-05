@@ -20,6 +20,9 @@ public class Atest
 	        int Voľba ;	
 	        boolean Chod = true ;
 	        
+	        Datab.vytvoritTabulky() ;
+	        Datab.nacitanieTabuliek() ;
+	       	        
 	        System.out.println("Vitajte v aplikácií na manažovanie kníh") ;
 	        Menu.totoMenu() ;
 	        while (Chod)
@@ -679,6 +682,7 @@ public class Atest
 					break ;
 					case 12:
 						System.out.println("Ukončili ste aplikáciu.") ;
+						Datab.ulozenieDoSQL() ;
 					    Chod = false;
 					break ;
 					
